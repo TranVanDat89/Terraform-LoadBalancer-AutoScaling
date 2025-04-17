@@ -1,4 +1,4 @@
 # Terraform-LoadBalancer-AutoScaling
 <div align="center">
-![alt text](image.png)
+  ![Architecture Diagram](image.png)
 </div>
