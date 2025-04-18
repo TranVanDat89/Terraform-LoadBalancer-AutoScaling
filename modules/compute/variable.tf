@@ -24,7 +24,3 @@ variable "target_group_arn_01" {
   type = string
   nullable = false
 }
-variable "target_group_arn_02" {
-  type = string
-  nullable = false
-}

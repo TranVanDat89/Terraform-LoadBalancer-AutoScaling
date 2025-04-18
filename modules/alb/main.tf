@@ -1,7 +1,9 @@
+# Lấy VPC default
 data "aws_vpc" "default" {
   default = true
 }
 
+# Lấy các Subnet trong VPC default
 data "aws_subnets" "default" {
   filter {
     name   = "vpc-id"
@@ -9,6 +11,7 @@ data "aws_subnets" "default" {
   }
 }
 
+# Tạo Application Load Balancer (ALB)
 resource "aws_lb" "alb" {
   name               = "my-alb"
   internal           = false
@@ -17,11 +20,12 @@ resource "aws_lb" "alb" {
   security_groups    = var.alb_security_group_ids
 }
 
-resource "aws_lb_target_group" "tg-01" {
+# Tạo Target Group (TG) cho EC2
+resource "aws_lb_target_group" "tg" {
   name        = "tg-01"
   port        = 80
   protocol    = "HTTP"
-  vpc_id = data.aws_vpc.default.id
+  vpc_id      = data.aws_vpc.default.id
   target_type = "instance"
 
   health_check {
@@ -29,40 +33,14 @@ resource "aws_lb_target_group" "tg-01" {
   }
 }
 
-resource "aws_lb_target_group" "tg-02" {
-  name        = "tg-02"
-  port        = 80
-  protocol    = "HTTP"
-  vpc_id = data.aws_vpc.default.id
-  target_type = "instance"
-
-  health_check {
-    path = "/"
-  }
-}
-
-resource "aws_lb_listener" "http" {
+# Tạo Listener cho ALB (port 80)
+resource "aws_lb_listener" "listener" {
   load_balancer_arn = aws_lb.alb.arn
   port              = 80
   protocol          = "HTTP"
 
   default_action {
-    type = "forward"
-    forward {
-      target_group {
-        arn = aws_lb_target_group.tg-01.arn
-        weight = 80
-      }
-
-      target_group {
-        arn    = aws_lb_target_group.tg-02.arn
-        weight = 20   
-      }
-
-      stickiness {
-        enabled  = false
-        duration = 1
-      }
-    }
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tg.arn
   }
 }
