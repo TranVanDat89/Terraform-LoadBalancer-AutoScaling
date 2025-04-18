@@ -28,3 +28,6 @@ echo "<br>Public IP: " >> index.html
 curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4 >> index.html
 
 echo "</html>" >> index.html
+
+# Create marker file when finished
+touch /tmp/instance_ready

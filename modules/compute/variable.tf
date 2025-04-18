@@ -24,3 +24,13 @@ variable "target_group_arn_01" {
   type = string
   nullable = false
 }
+
+variable "number_instances" {
+  type = number
+  nullable = false
+}
+
+variable "ami_name_snapshot" {
+  type = string
+  nullable = false
+}

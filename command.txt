@@ -2,4 +2,4 @@
 ssh-keygen -t rsa -b 4096 -C "tranvandatdh012@gmail.com"
 
 -- Kết nối EC2
-ssh -i "./keypair/lab-keypair" ec2-user@54.153.155.122
+ssh -i ./keypair/lab-keypair ec2-user@3.26.9.69

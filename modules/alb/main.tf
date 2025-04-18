@@ -1,22 +1,9 @@
-# Lấy VPC default
-data "aws_vpc" "default" {
-  default = true
-}
-
-# Lấy các Subnet trong VPC default
-data "aws_subnets" "default" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-}
-
 # Tạo Application Load Balancer (ALB)
 resource "aws_lb" "alb" {
   name               = "my-alb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = data.aws_subnets.default.ids
+  subnets            = var.subnet_ids
   security_groups    = var.alb_security_group_ids
 }
 
@@ -25,11 +12,17 @@ resource "aws_lb_target_group" "tg" {
   name        = "tg-01"
   port        = 80
   protocol    = "HTTP"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = var.vpc_id
   target_type = "instance"
 
   health_check {
-    path = "/"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 5
+    interval            = 10
+    path                = "/"
+    port                = "traffic-port"
+    matcher             = "200" # Expect HTTP 200
   }
 }
 

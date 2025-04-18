@@ -12,3 +12,13 @@ variable "ami" {
     type = string
     description = "This is ami of EC2"
 }
+
+variable "number_instances" {
+  type = number
+  default = 1
+}
+
+variable "ami_name_snapshot" {
+  type = string
+  default = "lab-ami-instance-2025"
+}
